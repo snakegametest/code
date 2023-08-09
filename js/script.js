@@ -9,9 +9,9 @@ const snake = [
 
 ]
 
-let direction = ""
+let direction 
 
-const drawnsnake = ( ) => { 
+const drawsnake = ( ) => { 
 ctx.fillStyle = "#ddd"
 
 snake.forEach((position, index) => {
@@ -25,17 +25,48 @@ snake.forEach((position, index) => {
 
 }  
 
-const movenake = ( ) => { 
+const movesnake = ( ) => { 
+    if(!direction) return
 
-    const head = snake.at(-1)
+    const head = snake[snake.length -1]
     
-    snake.shift()
-
     if (direction == "right") { 
 
-        snake.push([ x:0, y:0 ])
+        snake.push({ x:head.x + size, y:head.y })
     } 
+
+    if (direction == "left") { 
+
+        snake.push({ x:head.x - size, y:head.y })
+    }
+    
+    if (direction == "down") { 
+
+        snake.push({ x:head.x, y:head.y + size })
+    }
+
+    if (direction == "up") { 
+
+        snake.push({ x:head.x, y:head.y - size })
+    }
+
+
+    snake.shift()
 
 }
 
-drawnsnake ()
+const gameloop = () => { 
+    ctx.clearRect (0, 0, 600, 600)
+    movesnake()
+    drawsnake()
+
+    setTimeout(() => {
+        
+        gameloop ()
+
+    }, 300);
+
+    
+}
+
+gameloop ()
