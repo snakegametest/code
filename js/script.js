@@ -1,7 +1,9 @@
 const canvas = document.querySelector("canvas")
 const ctx = canvas.getContext("2d")
+const audio = new Audio ('../assets/audio.mp3')
 const size = 30
 const snake = [{x: 270, y: 240}]
+
 
 const randomnumber = (min, max) => {
     return Math.round (Math.random () * (max -min) +min)
@@ -105,7 +107,7 @@ const checkeat = () => {
     
     if (head.x == food.x && head.y == food.y) {
         snake.push (head)
-
+        audio.play()
         let x = randonposition()
         let y = randonposition()
 
@@ -135,7 +137,7 @@ const gameloop = () => {
         
         gameloop ()
 
-    }, 300)
+    }, 200)
 
     
 }
