@@ -2,8 +2,22 @@ const canvas = document.querySelector("canvas")
 const ctx = canvas.getContext("2d")
 const audio = new Audio ('../assets/audio.mp3')
 const size = 30
-const snake = [{x: 270, y: 240}]
+const score = document.querySelector(".score--value")
+const finalscore = document.querySelector(".final-score > span")
+const menu = document.querySelector("btn-play")
 
+
+const snake = [
+    {x: 270, y: 240},
+    {x: 300, y: 240},
+    {x: 330, y: 240},
+    {x: 360, y: 240},
+    {x: 390, y: 240}
+]
+
+const incrementscore = () => {
+    score.innerText = parseInt(score.innerText) + 10
+}
 
 const randomnumber = (min, max) => {
     return Math.round (Math.random () * (max -min) +min)
@@ -33,7 +47,7 @@ let direction, loopId
 const drawfood = () => {
     const{ x, y, color} = food
     ctx.shadowColor = color
-    ctx.shadowBlur = 10
+    ctx.shadowBlur = 20
     ctx.fillStyle = color
     ctx.fillRect(x, y, size,size) 
     ctx.shadowBlur = 0
@@ -106,6 +120,7 @@ const checkeat = () => {
     const head = snake[snake.length -1]
     
     if (head.x == food.x && head.y == food.y) {
+        incrementscore()
         snake.push (head)
         audio.play()
         let x = randonposition()
@@ -123,6 +138,33 @@ const checkeat = () => {
 
 }
 
+const checkcollision = () => {
+    
+    const head = snake[snake.length -1]
+    const canvaslimit = canvas.width - size
+    const neckindex = snake.length - 2
+
+    const wallcollision = 
+     head.x < 0 || head.x > canvaslimit || head.y < 0 || head.y > canvaslimit
+       
+    const selfcollision = 
+    snake.find((position, index) => {
+        return index <neckindex && position.x == head.x && position.y == head.y
+    })
+
+    if (wallcollision || selfcollision) {
+        gameover()
+    }
+}
+
+const gameover = () => {
+    direction = undefined
+
+    menu.style.display = "flex"
+    finalscore.innerText - score
+
+}
+
 const gameloop = () => { 
     
     clearInterval (loopId)
@@ -131,6 +173,7 @@ const gameloop = () => {
     drawfood ()
     movesnake()
     drawsnake()
+    checkcollision()
     checkeat()
 
     loopId = setTimeout(() => {
